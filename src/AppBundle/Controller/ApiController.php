@@ -11,26 +11,64 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 class ApiController extends FOSRestController
 {
     /**
-     * This is the 'Hello World' method. This method require authentication.
-     * If you want to test an authenticated call, use the following:
-     * 
-     * http POST http://localhost:8000/app_dev.php/oauth/v2/token \
-     *   grant_type=password \
-     *   client_id=1_3bcbxd9e24g0gk4swg0kwgcwg4o8k8g4g888kwc44gcc0gwwk4 \
-     *   client_secret=4ok2x70rlfokc8g0wws8c8kwcokw80k44sg48goc0ok4w0so0k \
-     *   username=admin \
-     *   password=admin
-     * 
+     * Returns list of all posts from ImageThread
+     *
      * @ApiDoc(
      *   resource=true,
-     *   description="Returns JSON formatted 'Hello world!'"
+     *   description="Returns JSON formatted total number of posts"
      * )
      * 
-     * @Get("/hello-world")
+     * @Get("/posts")
      */
-    public function helloWorldAction()
+    public function postsAction()
     {
-        $data = array("hello" => "world");
+        $posts = $this->getDoctrine()
+            ->getRepository('AppBundle:Post')
+            ->findBy(array(), array('date' => 'desc'));
+
+        $data = array("posts" => $posts);
+        $view = $this->view($data);
+        return $this->handleView($view);
+    }
+
+    /**
+     * Returns total number of posts from ImageThread
+     *
+     * @ApiDoc(
+     *   resource=true,
+     *   description="Returns JSON formatted total number of posts"
+     * )
+     *
+     * @Get("/total-number-of-posts")
+     */
+    public function totalNumberOfPostsAction()
+    {
+        $totalNumberOfPosts = $this->getDoctrine()
+            ->getRepository('AppBundle:Post')
+            ->getTotalNumberOfPosts();
+
+        $data = array("totalNumberOfPosts" => $totalNumberOfPosts);
+        $view = $this->view($data);
+        return $this->handleView($view);
+    }
+
+    /**
+     * Returns total number of views from ImageThread
+     *
+     * @ApiDoc(
+     *   resource=true,
+     *   description="Returns JSON formatted total number of views"
+     * )
+     *
+     * @Get("/total-number-of-views")
+     */
+    public function totalNumberOfViewsAction()
+    {
+        $totalNumberOfViews = $this->getDoctrine()
+            ->getRepository('AppBundle:Analytics')
+            ->getUpdatedTotalNumberOfViews();
+
+        $data = array("totalNumberOfViews" => $totalNumberOfViews);
         $view = $this->view($data);
         return $this->handleView($view);
     }
