@@ -11,13 +11,34 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 class ApiController extends FOSRestController
 {
     /**
-     * Returns list of all posts from ImageThread
+     * Returns ONE post from ImageThread by ID
      *
      * @ApiDoc(
      *   resource=true,
      *   description="Returns JSON formatted total number of posts"
      * )
      * 
+     * @Get("/post/{id}")
+     */
+    public function postAction($id)
+    {
+        $posts = $this->getDoctrine()
+            ->getRepository('AppBundle:Post')
+            ->find($id);
+
+        $data = array("posts" => $posts);
+        $view = $this->view($data);
+        return $this->handleView($view);
+    }
+
+    /**
+     * Returns list of all posts from ImageThread
+     *
+     * @ApiDoc(
+     *   resource=true,
+     *   description="Returns JSON formatted total number of posts"
+     * )
+     *
      * @Get("/posts")
      */
     public function postsAction()
