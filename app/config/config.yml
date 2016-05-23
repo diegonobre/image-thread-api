@@ -68,7 +68,8 @@ swiftmailer:
     spool:     { type: memory }
 
 # REST configuration
-nelmio_api_doc: ~
+nelmio_api_doc:
+    name: 'ImageThread API Documentation'
 
 fos_rest:
     routing_loader:
